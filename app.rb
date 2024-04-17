@@ -1,9 +1,9 @@
-Class StockApp
+class App
   attr_accessor :balance, :account, :stocks
 
-#initialize account with $10,000 balance
-#0 stocks in account
-#list of ten fake stocks with prices
+  #initialize account with $10,000 balance
+  #0 stocks in account
+  #list of ten fake stocks with prices
   def initialize
     @balance = 10000
     @account = []
@@ -16,17 +16,17 @@ Class StockApp
                "Equestrian Coffee Co"=> {"ticker"=> "TT", "price"=> 40, "variance"=> [-2, 3]},
                "Max's Flying Cars"=> {"ticker"=> "MAX", "price"=> 250, "variance"=> [-50, 40]},
                "Funtime Toys"=> {"ticker"=> "FUN", "price"=> 75, "variance"=> [-5, 5]},
-               "Specific Dynamics"=> {"ticker"=> "TT", "price"=> 150, "variance"=> [-10, 10]},
-  }
+               "Specific Dynamics"=> {"ticker"=> "TT", "price"=> 150, "variance"=> [-10, 10]}}
+  end
 
-#buy method:
-#make sure stock being bought matches company names or ticker symbols
-#make sure buy amount is less than or equal to account balance
-#reduce balance by correct amount
+  #buy method:
+  #make sure stock being bought matches company names or ticker symbols
+  #make sure buy amount is less than or equal to account balance
+  #reduce balance by correct amount
 
-#sell method:
-#make sure stock being sold is in user's account
-#credit balance with $ corresponding to stocks sold
+  #sell method:
+  #make sure stock being sold is in user's account
+  #credit balance with $ corresponding to stocks sold
 
   def update_prices
   #make sure price doesn't go below $1
@@ -34,8 +34,11 @@ Class StockApp
     key, val = stock
     a, b = val["variance"]
     val["price"] = val["price"] + rand(a..b)
-
-#loop: 
-#show balance
-#offer 3 options: buy, sell, exit
-#at end of each loop iteration, call update_prices
+    end
+  end 
+  
+  #loop: 
+  #show balance
+  #offer 3 options: buy, sell, exit
+  #at end of each loop iteration, call update_prices
+end
