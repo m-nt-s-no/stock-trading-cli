@@ -25,11 +25,11 @@ class TestApp < Minitest::Test
     test_app = App.new
     assert_equal 10000, test_app.balance, "Error: starting balance does not equal 10,000"
     test_stock = "Globo Bank"
-    test_app.buy(test_stock)
+    test_app.buy(test_stock, 1)
     assert_equal 10000 - test_app.stocks[test_stock]["price"], test_app.balance, "Error: incorrect amount deducted from balance"
     assert_equal true, test_app.account.include?({test_stock=> 1}), "Error: stock purchased but not included in account"
 
-    test_app.buy(test_stock)
+    test_app.buy(test_stock, 1)
     assert_equal 10000 - test_app.stocks[test_stock]["price"] - test_app.stocks[test_stock]["price"], test_app.balance, "Error: incorrect amount deducted from balance"
     assert_equal true, test_app.account.include?({test_stock=> 2}), "Error: additional share purchased but not included in account"
   end
@@ -43,7 +43,7 @@ class TestApp < Minitest::Test
 
     test_app.sell(test_stock_1, 1)
     assert_equal 10000 + test_app.stocks[test_stock_1]["price"], test_app.balance, "Error: incorrect amount credited to balance"
-    assert_equal false, test_app.account.include?({test_stock_1=> 1), "Error: stock remains in account despite being sold"
+    assert_equal false, test_app.account.include?({test_stock_1=> 1}), "Error: stock remains in account despite being sold"
 
     test_app.sell(test_stock_2, 1)
     assert_equal 10000 + test_app.stocks[test_stock_1]["price"] + test_app.stocks[test_stock_2]["price"], test_app.balance, "Error: incorrect amount credited to balance"

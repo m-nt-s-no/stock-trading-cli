@@ -23,11 +23,15 @@ class App
   #make sure stock being bought matches company names or ticker symbols
   #make sure buy amount is less than or equal to account balance
   #reduce balance by correct amount
+  def buy(stock, amount)
+  end
 
   #sell method:
   #make sure stock being sold is in user's account
   #make sure number of shares being sold <= number of shares in account
   #credit balance with $ corresponding to stocks sold
+  def sell(stock, amount)
+  end
 
   def update_prices
   #make sure price doesn't go below $1
