@@ -6,7 +6,7 @@ class App
   #list of ten fake stocks with prices
   def initialize
     @balance = 10000
-    @account = []
+    @account = [] #info inside to have form {stock_name=> number_of_shares}
     @stocks = {"Globo Bank"=> {"ticker"=> "GB", "price"=> 200, "variance"=> [-8, 10]},
                "TechTastic"=> {"ticker"=> "TT", "price"=> 500, "variance"=> [-40, 50]},
                "OldSkool Corp"=> {"ticker"=> "OSC", "price"=> 100, "variance"=> [-1, 2]},
@@ -26,6 +26,7 @@ class App
 
   #sell method:
   #make sure stock being sold is in user's account
+  #make sure number of shares being sold <= number of shares in account
   #credit balance with $ corresponding to stocks sold
 
   def update_prices
