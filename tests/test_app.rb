@@ -27,26 +27,26 @@ class TestApp < Minitest::Test
     test_stock = "Globo Bank"
     test_app.buy(test_stock, 1)
     assert_equal 10000 - test_app.stocks[test_stock]["price"], test_app.balance, "Error: incorrect amount deducted from balance"
-    assert_equal true, test_app.account.include?({test_stock=> 1}), "Error: stock purchased but not included in account"
+    assert_equal true, test_app.account.include?(test_stock), "Error: stock purchased but not included in account"
 
     test_app.buy(test_stock, 1)
     assert_equal 10000 - test_app.stocks[test_stock]["price"] - test_app.stocks[test_stock]["price"], test_app.balance, "Error: incorrect amount deducted from balance"
-    assert_equal true, test_app.account.include?({test_stock=> 2}), "Error: additional share purchased but not included in account"
+    assert_equal true, test_app.account[test_stock] == 2, "Error: additional share purchased but not included in account"
   end
 
   def test_sell
     test_app = App.new
     test_stock_1 = "Globo Bank"
-    test_stock_2 = "FunTime Toys"
-    test_app.account.push({test_stock_1=> 1})
-    test_app.account.push({test_stock_2=> 2})
+    test_stock_2 = "Funtime Toys"
+    test_app.account[test_stock_1] = 1
+    test_app.account[test_stock_2] = 2
 
     test_app.sell(test_stock_1, 1)
     assert_equal 10000 + test_app.stocks[test_stock_1]["price"], test_app.balance, "Error: incorrect amount credited to balance"
-    assert_equal false, test_app.account.include?({test_stock_1=> 1}), "Error: stock remains in account despite being sold"
+    assert_equal false, test_app.account.include?(test_stock_1), "Error: stock remains in account despite being sold"
 
     test_app.sell(test_stock_2, 1)
     assert_equal 10000 + test_app.stocks[test_stock_1]["price"] + test_app.stocks[test_stock_2]["price"], test_app.balance, "Error: incorrect amount credited to balance"
-    assert_equal true, test_app.account.include?({test_stock_2=> 1}), "Error: incorrect number of shares remain in account"
+    assert_equal true, test_app.account[test_stock_2] == 1, "Error: incorrect number of shares remain in account"
   end
 end

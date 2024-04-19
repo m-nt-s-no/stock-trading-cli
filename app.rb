@@ -6,7 +6,7 @@ class App
   #list of ten fake stocks with prices
   def initialize
     @balance = 10000
-    @account = [] #info inside to have form {stock_name=> number_of_shares}
+    @account = {} #info inside to have form {stock_name=> number_of_shares}
     @stocks = {"Globo Bank"=> {"ticker"=> "GB", "price"=> 200, "variance"=> [-8, 10]},
                "TechTastic"=> {"ticker"=> "TT", "price"=> 500, "variance"=> [-40, 50]},
                "OldSkool Corp"=> {"ticker"=> "OSC", "price"=> 100, "variance"=> [-1, 2]},
@@ -24,6 +24,12 @@ class App
   #make sure buy amount is less than or equal to account balance
   #reduce balance by correct amount
   def buy(stock, amount)
+    if self.account.include?(stock)
+      self.account[stock] = self.account[stock] + amount
+    else
+      self.account[stock] = amount
+    end
+    self.balance = self.balance - (self.stocks[stock]["price"] * amount)
   end
 
   #sell method:
@@ -31,14 +37,24 @@ class App
   #make sure number of shares being sold <= number of shares in account
   #credit balance with $ corresponding to stocks sold
   def sell(stock, amount)
+    if self.account[stock] >= amount
+      self.account[stock] = self.account[stock] - amount
+    end
+
+    self.balance = self.balance + (self.stocks[stock]["price"] * amount)
+    if self.account[stock] == 0
+      self.account.delete(stock)
+    end
   end
 
   def update_prices
-  #make sure price doesn't go below $1
   self.stocks.each do |stock|
     key, val = stock
     a, b = val["variance"]
-    val["price"] = val["price"] + rand(a..b)
+    diff = rand(a..b)
+    if (val["price"] > 1) && (diff > 0) #make sure price doesn't go below $1
+      val["price"] = val["price"] + diff
+    end
     end
   end 
   
