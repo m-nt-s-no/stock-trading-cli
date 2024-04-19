@@ -21,10 +21,13 @@ class TestApp < Minitest::Test
     assert_equal true, prices_before_update != prices_after_update, "error: update_prices did not alter stock prices"
   end
 
+  def test_validate
+  end
+
   def test_buy
     test_app = App.new
     assert_equal 10000, test_app.balance, "Error: starting balance does not equal 10,000"
-    test_stock = "Globo Bank"
+    test_stock = "GB"
     test_app.buy(test_stock, 1)
     assert_equal 10000 - test_app.stocks[test_stock]["price"], test_app.balance, "Error: incorrect amount deducted from balance"
     assert_equal true, test_app.account.include?(test_stock), "Error: stock purchased but not included in account"
@@ -36,8 +39,8 @@ class TestApp < Minitest::Test
 
   def test_sell
     test_app = App.new
-    test_stock_1 = "Globo Bank"
-    test_stock_2 = "Funtime Toys"
+    test_stock_1 = "GB"
+    test_stock_2 = "FUN"
     test_app.account[test_stock_1] = 1
     test_app.account[test_stock_2] = 2
 
