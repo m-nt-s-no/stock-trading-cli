@@ -1,5 +1,8 @@
-# ruby-cli-template
+# Stock Trading CLI App
+A command line interface app that simulates a stock trading account.
 
-Use this repository as a template for your Ruby CLI (command line interface) project.
+##Usage
+Run `ruby main.rb` in the terminal.
 
-- Ruby version: `3.2.1`
+##Ruby version: 
+`3.2.1`

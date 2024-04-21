@@ -22,6 +22,17 @@ class TestApp < Minitest::Test
   end
 
   def test_validate
+    test_app = App.new
+    error_msg = "error: validate error"
+    assert_equal false, test_app.validate("GB 100", "1"), error_msg
+    assert_equal true, test_app.validate("GB 1", "1"), error_msg
+    assert_equal true, test_app.validate("GB 1", "2"), error_msg
+    assert_equal false, test_app.validate("GB 1", "2"), error_msg
+    assert_equal false, test_app.validate("GC 1", "1"), error_msg
+    assert_equal false, test_app.validate("GB 1 1", "1"), error_msg
+    assert_equal false, test_app.validate("GB", "1"), error_msg
+    assert_equal false, test_app.validate("GB a", "1"), error_msg
+    assert_equal false, test_app.validate("GB -1", "1"), error_msg
   end
 
   def test_buy

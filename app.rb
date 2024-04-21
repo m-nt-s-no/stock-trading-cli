@@ -7,16 +7,16 @@ class App
   def initialize
     @balance = 10000
     @account = {} 
-    @stocks = {"GB"=> {"name"=> "Globo Bank", "price"=> 200, "variance"=> [-8, 10]},
-               "TT"=> {"name"=> "TechTastic", "price"=> 500, "variance"=> [-40, 50]},
-               "OSC"=> {"name"=> "OldSkool Corp", "price"=> 100, "variance"=> [-1, 2]},
-               "TTI"=> {"name"=> "Tasty Treats Inc", "price"=> 50, "variance"=> [-5, 5]},
-               "FBN"=> {"name"=> "FlyByNight Airlines", "price"=> 125, "variance"=> [-10, 8]},
-               "MMJ"=> {"name"=> "Medical MumboJumbo", "price"=> 400, "variance"=> [-80, 80]},
-               "EQ"=> {"name"=> "Equestrian Coffee Co", "price"=> 40, "variance"=> [-2, 3]},
-               "MAX"=> {"name"=> "Max's Flying Cars", "price"=> 250, "variance"=> [-50, 40]},
-               "FUN"=> {"name"=> "Funtime Toys", "price"=> 75, "variance"=> [-5, 5]},
-               "SD"=> {"name"=> "Specific Dynamics", "price"=> 150, "variance"=> [-10, 10]}}
+    @stocks = {"GB"=> {"name"=> "Globo Bank", "price"=> 200, "variance"=> [-8, 10], "price change"=> 0},
+               "TT"=> {"name"=> "TechTastic", "price"=> 500, "variance"=> [-40, 50], "price change"=> 0},
+               "OSC"=> {"name"=> "OldSkool Corp", "price"=> 100, "variance"=> [-1, 2], "price change"=> 0},
+               "TTI"=> {"name"=> "Tasty Treats Inc", "price"=> 50, "variance"=> [-5, 5], "price change"=> 0},
+               "FBN"=> {"name"=> "FlyByNight Airlines", "price"=> 125, "variance"=> [-10, 8], "price change"=> 0},
+               "MMJ"=> {"name"=> "Medical MumboJumbo", "price"=> 400, "variance"=> [-80, 80], "price change"=> 0},
+               "EQ"=> {"name"=> "Equestrian Coffee Co", "price"=> 40, "variance"=> [-2, 3], "price change"=> 0},
+               "MAX"=> {"name"=> "Max's Flying Cars", "price"=> 250, "variance"=> [-50, 40], "price change"=> 0},
+               "FUN"=> {"name"=> "Funtime Toys", "price"=> 75, "variance"=> [-5, 5], "price change"=> 0},
+               "SD"=> {"name"=> "Specific Dynamics", "price"=> 150, "variance"=> [-10, 10], "price change"=> 0}}
   end
 
   def buy(stock, amount)
@@ -44,16 +44,17 @@ class App
       key, val = stock
       a, b = val["variance"]
       diff = rand(a..b)
-      if (val["price"] > 1) && (diff > 0) #make sure price doesn't go below $1
+      if (val["price"] > 1) && (val["price"] + diff > 0) #make sure price doesn't go below $1
+        val["price change"] = diff
         val["price"] = val["price"] + diff
       end
     end
   end
 
   def buy_or_sell_prompt(action)
-    pp "Type the ticker symbol of the stock you want to #{action}, and the number of shares"
+    puts "Type the ticker symbol of the stock you want to #{action}, and the number of shares"
     puts "\n"
-    pp "like this: GB 1"
+    puts "like this: GB 1"
   end
 
   def validate(input, option)
@@ -62,69 +63,84 @@ class App
     if input_array.length != 2
       return false
     end
+    order, amount = input_array[0], input_array[1].to_i
     #test that first element of input is a valid ticker symbol
-    if self.stocks.keys.include?(input_array[0]) == false 
+    if self.stocks.keys.include?(order) == false 
       return false
     end
     #test that second element of input is a valid integer
-    if input_array[1].to_i > 0
+    if amount <= 0
       return false
     end
 
     if option == "1"
       #make sure buy amount is less than or equal to account balance
+      if self.balance < (amount * self.stocks[order]["price"])
+        return false
+      else
+        self.buy(order, amount)
+      end
     elsif option == "2"
       #make sure stock being sold is in user's account
       #make sure number of shares being sold <= number of shares in account
+      if self.account.keys.include?(order) == false || self.account[order] < amount
+        return false
+      else
+        self.sell(order, amount)
+      end
     end
+
+    return true
   end
   
-  #loop: 
+  #main loop: 
   #show balance
-  #offer 3 options: buy, sell, exit
+  #offer 4 options: buy, sell, show stocks in account, exit
   #at end of each loop iteration, call update_prices
-  def run
-    pp "Welcome to the CLI Stock Trading App!"
-    puts "\n"
+  def trade
+    puts "Welcome to the CLI Stock Trading App!"
     while true do
-      pp "Here is your balance: " + self.balance.to_s
-      puts "\n"
-      pp "Here are the latest prices:"
+      puts "Here is your balance: " + self.balance.to_s
+      puts "Here are the latest prices:"
       puts "\n"
       self.stocks.each do |stock|
         k, v = stock
-        pp "name: " + v["name"] + ", ticker: " + k + ", price: " + v["price"].to_s
+        puts "name: " + v["name"] + ", ticker: " + k + ", price: " + v["price"].to_s + ", price change: " + v["price change"].to_s
       end
-      pp "Choose one of three options:"
+      puts "Choose one of three options:"
       puts "\n"
-      pp "Type 1 to buy, 2 to sell, or 3 to exit"
+      puts "Type 1 to buy, 2 to sell, 3 to see your account, or 4 to exit."
 
       option = gets.chomp
       if option == "1"
         self.buy_or_sell_prompt("buy")
         input = gets.chomp
-        #if validate(input, option)
-          #stock_to_buy, amount_to_buy = process(input)
-          #self.buy(stock_to_buy, amount_to_buy)
-        #end
+        if validate(input, option) == false
+          puts "Sorry, your order could not be fulfilled"
+        else
+          puts "Your order has been fulfilled!"
+        end
       elsif option == "2"
         self.buy_or_sell_prompt("sell")
         input = gets.chomp
-        #if validate(input, option)
-          #stock_to_buy, amount_to_buy = process(input)
-          #self.buy(stock_to_buy, amount_to_buy)
-        #end
+        if validate(input, option) == false
+          puts "Sorry, your order could not be fulfilled"
+        else
+          puts "Your order has been fulfilled!"
+        end
       elsif option == "3"
-        pp "Exiting app. Have a good one!"
+        puts "Your account: "
+        self.account.each do |stock|
+          stock, amount = stock
+          puts "Stock: #{stock}, amount: #{amount}, worth: #{amount * self.stocks[stock]["price"]}"
+        end
+      elsif option == "4"
+        puts "Exiting app. Have a good one!"
         break
       else
-        pp "Sorry, that is not a valid option"
+        puts "Sorry, that is not a valid option"
       end
       self.update_prices
     end
   end
 end
-
-pp "hello".to_i, "you".to_i
-#new_app = App.new
-#new_app.run
